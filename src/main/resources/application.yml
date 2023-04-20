@@ -1,0 +1,26 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/restaurant
+    username: root
+    password: root
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+
+food-ordering:
+  timings: break-fast, lunch, dinner
+
+
+nakul:
+  id: 101
+  email: nakul@email.com
+  mobileNumber: 999999999
+  
+  
+priya:
+  id: 102
+  email: priya@email.com
+  mobileNumber: 88888888
