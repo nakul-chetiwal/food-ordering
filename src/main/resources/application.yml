@@ -1,3 +1,6 @@
+server:
+  port: 8081
+
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -16,11 +19,5 @@ food-ordering:
 
 nakul:
   id: 101
-  email: nakul@email.com
+  email: nakultest@email.com
   mobileNumber: 999999999
-  
-  
-priya:
-  id: 102
-  email: priya@email.com
-  mobileNumber: 88888888

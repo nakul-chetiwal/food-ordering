@@ -13,6 +13,10 @@ public class OrderResponse {
 	public void setOrderDto(OrderDto orderDto) {
 		this.orderDto = orderDto;
 	}
-	
-	
+
+	public OrderResponse() {
+	}
+	public OrderResponse(OrderDto orderDto) {
+		this.orderDto = orderDto;
+	}
 }

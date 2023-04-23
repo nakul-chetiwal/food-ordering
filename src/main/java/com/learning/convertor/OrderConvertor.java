@@ -5,21 +5,19 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import com.learning.model.dto.*;
+import org.aspectj.weaver.ast.Or;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
 import com.learning.enums.OrderState;
 import com.learning.model.api.request.OrderRequest;
-import com.learning.model.dto.Drink;
-import com.learning.model.dto.MainCourse;
-import com.learning.model.dto.OrderDto;
-import com.learning.model.dto.Snack;
 import com.learning.model.entity.OrderEntity;
 
 @Component
 public class OrderConvertor {
 
-    public OrderDto convert(OrderRequest orderRequest) {
+    public OrderDto convertOrderRequestToOrderDto(OrderRequest orderRequest) {
 
         OrderDto orderDto = null;
         if (Objects.nonNull(orderRequest)) {
@@ -27,6 +25,8 @@ public class OrderConvertor {
 
           //  List<String> items = Collections.emptyList();
             List<String> items = new ArrayList<>();
+            Double totalPrice=0.0;
+
 
             List<Snack> snacks = orderRequest.getMenu().getSnacks();
             List<MainCourse> mainCourses = orderRequest.getMenu().getMainCourses();
@@ -34,37 +34,51 @@ public class OrderConvertor {
 
             if (!CollectionUtils.isEmpty(snacks)) {
                 List<String> snackNames = snacks.stream().map(snack -> snack.getName()).collect(Collectors.toList());
+                totalPrice= snacks.stream().map(snack -> snack.getPrice()).reduce(0.0, (a, b) -> a + b);
                 items.addAll(snackNames);
             }
             if (!CollectionUtils.isEmpty(mainCourses)) {
                 List<String> mainCourseNames = mainCourses.stream().map(mainCourse -> mainCourse.getName())
                         .collect(Collectors.toList());
+                totalPrice= totalPrice +  mainCourses.stream().map(mainCourse -> mainCourse.getPrice()).reduce(0.0, (a, b) -> a + b);
                 items.addAll(mainCourseNames);
             }
             if (!CollectionUtils.isEmpty(drinks)) {
                 items.addAll(drinks.stream().map(drink -> drink.getName()).collect(Collectors.toList()));
+                totalPrice= totalPrice + drinks.stream().map(drink -> drink.getPrice()).reduce(0.0, (a, b) -> a + b);
             }
 
+            // https://stackoverflow.com/questions/66347177/null-check-to-an-list-before-apply-java-steam-to-it
+//            Double totalPrice = snacks.stream().map(snack -> snack.getPrice()).reduce(0.0, (a, b) -> a + b)
+//                    + mainCourses.stream().map(mainCourse -> mainCourse.getPrice()).reduce(0.0, (a, b) -> a + b)
+//                    + Optional.ofNullable(drinks)
+//                    .get()
+//                    .stream()
+//                    .map(drink -> drink.getPrice())
+//                    .reduce(0.0, (a, b) -> a + b)
 
 //            Double totalPrice = snacks.stream().map(snack -> snack.getPrice()).reduce(0.0, (a, b) -> a + b)
 //                    + mainCourses.stream().map(mainCourse -> mainCourse.getPrice()).reduce(0.0, (a, b) -> a + b)
-//                    + Optional.ofNullable(drinks).get()
-//                      .stream().
-//                    map(drink -> Optional.ofNullable(drink.getPrice()).get()).reduce(0.0, (a, b) -> a + b);
+//                    + Objects.requireNonNullElse(
+//                    drinks.stream()
+//                    .map(drink -> drink.getPrice())
+//                    .reduce(0.0, (a, b) -> a + b),Collections.emptyList());
 
 
+
+
+            orderDto.setOrderDate(LocalDate.now());
             String invoice = UUID.randomUUID().toString().substring(0, 8) + ":" + orderDto.getOrderDate();
             orderDto.setInvoice(invoice);
-            orderDto.setOrderDate(LocalDate.now());
             orderDto.setOrderState(OrderState.NEW);
-            orderDto.setTotalPrice(null); // TODO
+            orderDto.setTotalPrice(totalPrice);
             orderDto.setItems(items);
         }
 
         return orderDto;
     }
 
-    public OrderEntity convert(OrderDto orderDto) {
+    public OrderEntity convertOrderDtoToOrderEntity(OrderDto orderDto) {
         OrderEntity orderEntity = new OrderEntity();
         String item = String.join(",", orderDto.getItems());
         orderEntity.setItems(item);
@@ -75,9 +89,21 @@ public class OrderConvertor {
         return orderEntity;
     }
 
-    public OrderDto convertToEntity(OrderEntity orderEntity) {
-
-        return null;
+    public OrderDto convertOrderEntityToOrderDto(OrderEntity orderEntity) {
+         OrderDto orderDto=new OrderDto();
+         orderDto.setInvoice(orderEntity.getInvoice());
+         orderDto.setOrderDate(orderEntity.getOrderDate());
+         orderDto.setTotalPrice(orderEntity.getTotalPrice());
+         orderDto.setOrderState(orderEntity.getOrderState());
+         orderDto.setItems(new ArrayList<>(Arrays.asList(orderEntity.getItems().split(","))));
+        return orderDto;
     }
+
+    public OrderStateDto convertOrderStateToOrderStateDto(OrderState orderState){
+        OrderStateDto orderStateDto = new OrderStateDto();
+        orderStateDto.setOrderState(orderState);
+        return orderStateDto;
+    }
+
 
 }
