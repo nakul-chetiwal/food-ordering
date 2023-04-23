@@ -9,6 +9,7 @@ import com.learning.repository.OrderRepository;
 import com.learning.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -58,13 +59,15 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public List<OrderDto> orderReports(LocalDate orderDate) {
-        List<OrderEntity> orderEntityList=  orderRepository.findByOrderDateGreaterThanEqual(orderDate).orElseThrow(() ->new NullPointerException());
-        return  orderEntityList.stream().map(orderConvertor::convertOrderEntityToOrderDto).collect(Collectors.toList());
+        List<OrderEntity> orderEntityList = orderRepository.findByOrderDateGreaterThanEqual(orderDate).orElseThrow(() -> new NullPointerException());
+        return orderEntityList.stream().map(orderConvertor::convertOrderEntityToOrderDto).collect(Collectors.toList());
     }
 
     @Override
-    public List<OrderDto> orderReports(LocalDate orderDate, String orderState) {
-        List<OrderEntity> orderEntityList= orderRepository.findByOrderStateAndOrderDate(orderDate,OrderState.valueOf(orderState)).orElseThrow(() ->new NullPointerException());
-        return null;
+    public List<OrderDto> orderReports(LocalDate orderDate, OrderState orderState) {
+        List<OrderEntity> orderEntityList = orderRepository.findByOrderStateAndOrderDateGreaterThanEqual(
+                orderState, orderDate).orElseThrow(() -> new NullPointerException());
+        List<OrderDto> orderDtoList = orderEntityList.stream().map(orderConvertor::convertOrderEntityToOrderDto).collect(Collectors.toList());
+        return orderDtoList;
     }
 }

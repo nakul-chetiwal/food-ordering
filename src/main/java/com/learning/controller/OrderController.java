@@ -1,5 +1,6 @@
 package com.learning.controller;
 
+import com.learning.enums.OrderState;
 import com.learning.model.dto.OrderStateDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -50,7 +51,8 @@ public class OrderController {
 	}
 
 	@GetMapping("/report/{localDate}/{orderState}")
-	public List<OrderDto> orderReports(@PathVariable @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate localDate, @PathVariable String orderState){
-		return orderService.orderReports(localDate,orderState);
+	public List<OrderDto> orderReports(@PathVariable @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate localDate,
+									   @PathVariable String orderState){
+		return orderService.orderReports(localDate, OrderState.valueOf(orderState));
 	}
 }

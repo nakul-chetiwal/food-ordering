@@ -4,19 +4,20 @@ import java.time.LocalDate;
 import java.util.List;
 
 
+import com.learning.enums.OrderState;
 import com.learning.model.dto.OrderDto;
 import com.learning.model.dto.OrderStateDto;
 
 public interface OrderService {
 
-	public OrderDto createOrder(OrderDto orderDto);
+	 OrderDto createOrder(OrderDto orderDto);
 	
-	public OrderStateDto cancelOrder(Long id);
+	 OrderStateDto cancelOrder(Long id);
 	
-	public Boolean refundOrder(Long id);
+	 Boolean refundOrder(Long id);
 	
-	public List<OrderDto> orderReports(LocalDate orderDate);
+	 List<OrderDto> orderReports(LocalDate orderDate);
 	
-	public List<OrderDto> orderReports(LocalDate orderDate, String orderState);
+	 List<OrderDto> orderReports(LocalDate orderDate, OrderState orderState);
 
 }
