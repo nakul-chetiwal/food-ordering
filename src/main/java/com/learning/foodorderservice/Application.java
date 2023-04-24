@@ -9,8 +9,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import com.learning.foodorderservice.config.DefaultConfigurations;
 import com.learning.foodorderservice.config.Nakul;
+import org.springframework.cloud.openfeign.EnableFeignClients;
 
-
+@EnableFeignClients
 @SpringBootApplication
 public class Application implements CommandLineRunner {
 

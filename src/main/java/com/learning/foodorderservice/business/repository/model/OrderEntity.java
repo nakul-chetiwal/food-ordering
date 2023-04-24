@@ -10,8 +10,16 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 import com.learning.foodorderservice.business.enums.OrderState;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class OrderEntity {
 
 	@Id
@@ -26,53 +34,4 @@ public class OrderEntity {
 	@Enumerated(EnumType.STRING)
 	private OrderState orderState;
 
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
-
-	public String getInvoice() {
-		return invoice;
-	}
-
-	public void setInvoice(String invoice) {
-		this.invoice = invoice;
-	}
-
-	public LocalDate getOrderDate() {
-		return orderDate;
-	}
-
-	public void setOrderDate(LocalDate orderDate) {
-		this.orderDate = orderDate;
-	}
-
-	public String getItems() {
-		return items;
-	}
-
-	public void setItems(String items) {
-		this.items = items;
-	}
-
-	public Double getTotalPrice() {
-		return totalPrice;
-	}
-
-	public void setTotalPrice(Double totalPrice) {
-		this.totalPrice = totalPrice;
-	}
-
-	public OrderState getOrderState() {
-		return orderState;
-	}
-
-	public void setOrderState(OrderState orderState) {
-		this.orderState = orderState;
-	}
-	
-	
 }

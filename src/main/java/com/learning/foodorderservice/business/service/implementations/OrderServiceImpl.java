@@ -1,5 +1,7 @@
 package com.learning.foodorderservice.business.service.implementations;
 
+import com.learning.foodorderservice.business.service.PaymentService;
+import com.learning.foodorderservice.clients.PaymentClient;
 import com.learning.foodorderservice.model.dto.OrderStateDto;
 import com.learning.foodorderservice.business.convertor.OrderConvertor;
 import com.learning.foodorderservice.business.enums.OrderState;
@@ -24,6 +26,9 @@ public class OrderServiceImpl implements OrderService {
     @Autowired
     private OrderConvertor orderConvertor;
 
+    @Autowired
+    private PaymentService paymentService;
+
     @Override
     public OrderDto createOrder(OrderDto orderDto) {
 
@@ -31,6 +36,8 @@ public class OrderServiceImpl implements OrderService {
         entity = orderRepository.save(entity);
 
         OrderDto responseOrderDto = orderConvertor.convertOrderEntityToOrderDto(entity);
+        paymentService.makePayment(responseOrderDto);
+
         return responseOrderDto;
     }
 
